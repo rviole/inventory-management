@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block title %} - Sales History{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8 col-12">
+        <h1>Sales History</h1>
+    </div>
+    <div class="col-md-4 col-12 text-md-end">
+        <a href="{{ url_for('sales') }}" class="btn btn-primary">
+            <i class="fas fa-shopping-cart me-2"></i>Back to Sales
+        </a>
+    </div>
+</div>
+
+{% if sales %}
+<div class="table-responsive">
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Customer</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales %}
+            <tr>
+                <td>{{ sale.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ sale.product.name }}</td>
+                <td>{{ sale.quantity_sold }}</td>
+                <td>${{ "%.2f"|format(sale.sale_price) }}</td>
+                <td>${{ "%.2f"|format(sale.sale_price * sale.quantity_sold) }}</td>
+                <td>{{ sale.customer_name or '-' }}</td>
+                <td>{{ sale.notes or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    No sales history available.
+</div>
+{% endif %}
+{% endblock %}

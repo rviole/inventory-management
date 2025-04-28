@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+
+{% block title %} - Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Dashboard</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-6 mb-3">
+        <div class="card h-100 bg-dark">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="fas fa-boxes me-2"></i>Products</h5>
+                <p class="display-4">{{ total_products }}</p>
+                <a href="{{ url_for('inventory') }}" class="btn btn-sm btn-outline-light">View Inventory</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 mb-3">
+        <div class="card h-100 bg-dark">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="fas fa-shopping-cart me-2"></i>Sales</h5>
+                <p class="display-4">{{ total_sales }}</p>
+                <a href="{{ url_for('sales_history') }}" class="btn btn-sm btn-outline-light">View Sales</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-dark mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Low Inventory Alert</h5>
+                <span class="badge bg-warning">{{ low_inventory }}</span>
+            </div>
+            <div class="card-body">
+                {% if low_inventory > 0 %}
+                <p>You have {{ low_inventory }} products with low inventory (less than 5 items).</p>
+                <a href="{{ url_for('inventory') }}" class="btn btn-warning btn-sm">
+                    View Low Inventory
+                </a>
+                {% else %}
+                <p>All products have sufficient inventory levels.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-dark">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Sales</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_sales %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-dark">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sale in recent_sales %}
+                            <tr>
+                                <td>{{ sale.product.name }}</td>
+                                <td>{{ sale.quantity_sold }}</td>
+                                <td>${{ "%.2f"|format(sale.sale_price) }}</td>
+                                <td>{{ sale.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{{ url_for('sales_history') }}" class="btn btn-outline-light btn-sm">View All Sales</a>
+                {% else %}
+                <p class="mb-0">No recent sales recorded.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <a href="{{ url_for('sales') }}" class="btn btn-primary btn-lg mb-2">
+            <i class="fas fa-cart-plus me-2"></i>New Sale
+        </a>
+        <a href="{{ url_for('add_product') }}" class="btn btn-success btn-lg mb-2">
+            <i class="fas fa-plus-circle me-2"></i>Add Product
+        </a>
+    </div>
+</div>
+{% endblock %}

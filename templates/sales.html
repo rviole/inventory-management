@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block title %} - Sales{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-12">
+        <h1>Sales</h1>
+    </div>
+</div>
+
+<div class="card bg-dark mb-4">
+    <div class="card-body">
+        <div class="mb-0">
+            <div class="input-group">
+                <input type="text" id="productSearch" class="form-control search-input" 
+                       data-results="searchResults" placeholder="Search product to sell..." 
+                       autocomplete="off">
+                <button class="btn btn-outline-light" type="button" id="searchButton">
+                    <i class="fas fa-search"></i>
+                </button>
+                <a href="{{ url_for('sales') }}" class="btn btn-outline-danger">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+            <div id="searchResults" class="mt-2"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card bg-dark h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="fas fa-history me-2"></i>Sales History</h5>
+                <p class="card-text">View all past sales transactions</p>
+                <a href="{{ url_for('sales_history') }}" class="btn btn-outline-light">View History</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card bg-dark h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title"><i class="fas fa-boxes me-2"></i>Inventory</h5>
+                <p class="card-text">View and manage your inventory</p>
+                <a href="{{ url_for('inventory') }}" class="btn btn-outline-light">View Inventory</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3">Products Available for Sale</h3>
+
+{% if products %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for product in products %}
+    <div class="col">
+        <div class="card h-100 bg-dark">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">
+                    <strong>Price:</strong> ${{ "%.2f"|format(product.price) }}<br>
+                    <strong>In Stock:</strong> 
+                    <span class="badge rounded-pill {% if product.quantity < 5 %}bg-danger{% elif product.quantity < 10 %}bg-warning{% else %}bg-success{% endif %}">
+                        {{ product.quantity }}
+                    </span>
+                </p>
+                {% if product.description %}
+                <p class="card-text small">{{ product.description|truncate(100) }}</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <div class="d-grid">
+                    <a href="{{ url_for('sell_product', product_id=product.id) }}" class="btn btn-primary">
+                        <i class="fas fa-shopping-cart me-2"></i>Sell
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    {% if search_query %}
+    No products found matching "{{ search_query }}". <a href="{{ url_for('sales') }}">Clear search</a>
+    {% else %}
+    No products available for sale. <a href="{{ url_for('add_product') }}">Add your first product</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

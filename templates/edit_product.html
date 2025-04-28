@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block title %} - Edit Product{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 col-12 mx-auto">
+        <div class="card bg-dark">
+            <div class="card-header">
+                <h2><i class="fas fa-edit me-2"></i>Edit Product</h2>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('edit_product', product_id=product.id) }}" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Product Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ product.description }}</textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label for="quantity" class="form-label">Current Quantity</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" min="0" value="{{ product.quantity }}">
+                            <small class="form-text text-muted">Changing this will record a manual adjustment</small>
+                        </div>
+                        
+                        <div class="col-6 mb-3">
+                            <label for="price" class="form-label">Price ($) *</label>
+                            <input type="number" class="form-control" id="price" name="price" min="0.01" step="0.01" value="{{ product.price }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Update Product
+                        </button>
+                        <a href="{{ url_for('inventory') }}" class="btn btn-outline-light">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Inventory
+                        </a>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <h4>Add Inventory</h4>
+                <form action="{{ url_for('fillup_inventory', product_id=product.id) }}" method="post">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-4 col-12">
+                            <label for="quantity_added" class="col-form-label">Quantity to Add</label>
+                            <input type="number" id="quantity_added" name="quantity_added" class="form-control" min="1" required>
+                        </div>
+                        <div class="col-md-8 col-12">
+                            <label for="notes" class="col-form-label">Notes</label>
+                            <input type="text" id="notes" name="notes" class="form-control" placeholder="Optional note about this addition">
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus-circle me-2"></i>Add to Inventory
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
